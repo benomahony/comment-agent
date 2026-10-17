@@ -1,0 +1,27 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "17 6 * * *" # daily, so dependency and toolchain drift shows up without a push
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - uses: rhysd/action-setup-vim@febef33995d6649302e9d88dda81e071b68f16a7 # v1.6.1
+        with:
+          neovim: true
+          version: stable
+      - run: uv sync --locked
+      - name: Format
+        run: uv run ruff format --check src tests
+      - name: Lint (every ruff rule; exceptions are documented in pyproject.toml)
+        run: uv run ruff check src tests
+      - name: Type check (pyright strict, warnings fail the build)
+        run: uv run pyright --warnings
+      - name: Tests, including the Neovim end-to-end test
+        run: uv run pytest

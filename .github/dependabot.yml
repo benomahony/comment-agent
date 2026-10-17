@@ -1,0 +1,11 @@
+version: 2
+updates:
+  # Proposes reviewed bumps for the SHA-pinned actions in ci.yml.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: weekly

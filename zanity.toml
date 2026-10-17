@@ -1,0 +1,3 @@
+# End-to-end tests drive a real Neovim against the language server, so they start processes.
+[paths."tests/e2e/"]
+disable = ["process-in-test"]
